@@ -2,48 +2,47 @@
 
 ## 📌 Overview
 This project is a database-driven application designed to manage the activity of a publishing house.  
-It centralizes information about **authors, books, publishing houses, contracts, clients, and orders**, modeling real-world editorial and commercial processes.
+It models real-world editorial and commercial workflows, covering **authors, books, publishing houses, contracts, clients, and orders**.
 
-The application was developed for educational purposes, focusing on **database design**, **SQL queries**, and **role-based application logic**.
-
----
-
-## ⚙️ How the Application Works
-The system uses a **role-based access model**. Each user logs in and is redirected to a specific dashboard depending on their role:
-
-- **Administrator**
-- **Editor**
-- **Client**
-
-Authentication is handled through a login page that validates user credentials against the database and stores the user role in session.
 
 ---
 
-## 🧩 Main Functionalities
+## ⚙️ Application Architecture
+The system is built around a **role-based access model**.  
+After authentication, users are redirected to a dedicated dashboard depending on their role:
+
+- **Administrator** – system management and reporting
+- **Editor** – editorial data management
+- **Client** – catalog browsing and order placement
+
+User authentication and authorization are handled through the database, with roles stored and managed centrally.
+
+---
+
+## 🧩 Core Features
 
 ### 👤 Administrator
 - View global system statistics (users, books, orders, total revenue)
-- Manage users (delete editors or clients, with protections for admins)
+- Manage users (delete editors or clients, administrators protected)
 - Delete orders with automatic stock restoration
-- Generate complex analytical reports (sales, revenue, top clients, top books)
+- Generate advanced analytical reports using complex SQL queries
 
 ### ✍️ Editor
-- Manage books (insert, edit price and stock)
+- Manage books (insert, update price and stock)
 - Manage authors
-- Manage publishing contracts (royalty, validity period)
-- Insert books only if a valid author–publisher contract exists
-- View editorial statistics
+- Manage publishing contracts (royalty percentage, validity period)
+- Enforce real-world constraints (books can only be published if a valid author–publisher contract exists)
 
 ### 🛒 Client
-- Browse the book catalog with advanced filters
+- Browse the book catalog using multiple filters (author, genre, price range)
 - Place orders with real-time stock validation
-- View order history and detailed order breakdowns
+- View order history and detailed order contents
 - Track personal purchasing statistics
 
 ---
 
 ## 🗄️ Database Design
-The database models the core entities of a publishing house:
+The database schema models the core entities involved in a publishing house:
 
 - Users
 - Authors
@@ -54,23 +53,24 @@ The database models the core entities of a publishing house:
 - Orders
 - Order Details
 
-Relationships include:
-- One-to-many (authors → books, clients → orders)
-- Many-to-many (authors ↔ publishers via contracts, books ↔ orders)
-- Referential integrity enforced using primary keys, foreign keys, and constraints
+The design includes:
+- One-to-many relationships (authors → books, clients → orders)
+- Many-to-many relationships (authors ↔ publishers, books ↔ orders)
+- Strong referential integrity enforced via primary keys, foreign keys, and constraints
 
 ---
 
 ## 🧪 Data Integrity & Consistency
-- UNIQUE constraints for usernames, emails, and publisher names
-- CHECK constraints for prices, stock values, and percentages
-- NOT NULL constraints for mandatory fields
-- Controlled deletions with manual cascade logic
-- SQL transactions used for critical operations (orders, deletions)
+- `PRIMARY KEY` and `FOREIGN KEY` constraints on all relations
+- `UNIQUE` constraints for usernames, emails, and publisher names
+- `CHECK` constraints for numeric values (price, stock, royalty)
+- `NOT NULL` constraints for mandatory fields
+- Transaction-safe operations for order placement and deletion
+- Manual cascade logic to ensure consistent stock updates
 
 ---
 
-## 🛠️ Technologies & Tools Used
+## 🛠️ Technologies Used
 - **C#**
 - **ASP.NET WebForms**
 - **SQL Server**
@@ -82,22 +82,54 @@ Relationships include:
 ---
 
 ## 📊 Reporting & Queries
-The application includes:
-- Simple queries with JOINs for listings and filters
-- Complex queries using `GROUP BY`, `SUM`, `COUNT`, subqueries, and parameters
-- Dynamic reports such as:
+The application includes both simple and advanced SQL queries:
+- Catalog and list views using JOINs
+- Parameterized filtering
+- Aggregations using `SUM`, `COUNT`, and `GROUP BY`
+- Business reports such as:
   - Top-selling books
-  - Top clients by spending
+  - Top clients by total spending
   - Revenue per publishing house
   - Clients without orders
 
 ---
 
-## 🎯 Purpose
+## 💾 Database Setup
+
+A full SQL Server database backup is provided to ensure the application runs with full functionality.
+
+### Requirements
+- SQL Server (tested with SQL Server 2022)
+- SQL Server Management Studio (SSMS)
+
+### Restore Instructions
+1. Open **SQL Server Management Studio**.
+2. Connect to your local SQL Server instance.
+3. Right-click **Databases** → **Restore Database...**
+4. Select **Device** → **Browse** and choose `PublishingHouseDB.bak`.
+5. Set the destination database name to `PublishingHouseDB`.
+6. Confirm and wait for the restore process to complete.
+
+### Notes
+- If file path conflicts occur, open the **Files** tab during restore and update the `.mdf` / `.ldf` locations.
+- The application expects the database name to be `PublishingHouseDB`.
+- All credentials included are for demonstration purposes only.
+
+---
+
+## ▶️ Running the Application
+1. Restore the database as described above.
+2. Open the solution in Visual Studio.
+3. Verify the connection string (Integrated Security recommended).
+4. Build and run the application.
+
+---
+
+## 🎯 Project Purpose
 This project demonstrates:
-- Practical database modeling
-- Integration between C# and SQL
-- Role-based application logic
-- Real-world business rules implemented at database and application level
+- Practical relational database modeling
+- Integration between C# and SQL Server
+- Role-based access control
+- Enforcement of real-world business rules at database and application level
 
 It provides a solid foundation for future extensions, such as a modern web API or desktop application.
